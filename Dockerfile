@@ -1,9 +1,29 @@
-# Nginx 이미지 사용
-FROM nginx:latest
+# 기반이 되는 이미지 설정 (예: Python 3.8)
+FROM python:3.8.16
 
-COPY index.html /usr/share/nginx/html/
-# 컨테이너 내부에서 사용할 포트 설정 (Nginx 기본 포트)
-EXPOSE 80
+# 작업 디렉토리 설정
+WORKDIR /app
 
-# 컨테이너 실행 시 Nginx 시작
-CMD ["nginx", "-g", "daemon off;"]
+# 호스트의 현재 디렉토리의 모든 파일을 컨테이너의 /app 디렉토리로 복사
+COPY . /app
+
+# 필요한 패키지 설치
+RUN pip3 install Flask
+
+RUN cd /app
+
+RUN pip3 install -r requirements.txt
+
+# Flask 애플리케이션 실행
+# CMD ["python", "app.py"]
+
+# 플라스크 애플리케이션을 환경변수로 지정
+ENV FLASK_APP app
+
+# 플라스크 애플리케이션 실행 (내장 서버 사용)
+ENTRYPOINT flask run --host 0.0.0.0
+
+# Gunicorn을 사용하여 Flask 애플리케이션을 실행하는 옵션
+# RUN pip3 install gunicorn
+# CMD ["gunicorn", "app:app", "-b", "0.0.0.0:8000"]
+# ENTRYPOINT gunicorn -b 0.0.0.0:5000 main:app
