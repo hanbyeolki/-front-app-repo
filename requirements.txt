@@ -6,4 +6,8 @@ Flask-SQLAlchemy
 SQLAlchemy==1.4
 Flask-Migrate==3.0.1
 boto3
+<<<<<<< HEAD
 mysqlclient
+=======
+mysqlclient
+>>>>>>> 09e5d62ba911d986a92eae4e4cb9b161a5d35272
