@@ -19,7 +19,7 @@ class Ticket(db.Model):
     __tablename__ = "new_ticket_table"
     id = db.Column(db.Integer, primary_key=True)
     event = db.Column(db.String(255), nullable=False)
-    price = db.Column(db.Float, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
 
 
