@@ -73,7 +73,8 @@
     <div class="container">
         <h1 class="mt-4">Buy Ticket for {{ ticket.event }}</h1>
         <div class="ticket-info">
-            <img src="{{ url_for('static', filename=ticket.event + '.jpg') }}" alt="{{ ticket.event }}">
+            <img src="{{ url_for('static', filename=ticket.event + '.jpg') }}" alt="{{ ticket.event }}"
+                style="width: 500px; height: auto;">
             <p>가격: {{ ticket.price }} 원</p>
             <p>남은 수량: {{ ticket.quantity }}</p>
             <br> <!-- 공백 줄 추가 -->

@@ -93,7 +93,8 @@
         <ul class="mt-4">
             {% for ticket in tickets %}
             <li class="p-3">
-                <img src="{{ url_for('static', filename=ticket.event + '.jpg') }}" alt="{{ ticket.event }}">
+                <img src="{{ url_for('static', filename=ticket.event + '.jpg') }}" alt="{{ ticket.event }}"
+                    style="width: 500px; height: auto;">
                 <div class="ticket-info">
                     <strong>{{ ticket.event }}</strong><br>
                     {{ ticket.price }} 원
