@@ -41,22 +41,14 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         FLASK_REPOSITORY: 3team-flask
-        IMAGE_TAG: ${{ steps.image.outputs.version }}
-      run: |
-        echo "::set-output name=flask_repository::$FLASK_REPOSITORY"
-        echo "::set-output name=image_tag::$IMAGE_TAG"
-        docker build -t $ECR_REGISTRY/$FLASK_REPOSITORY:$IMAGE_TAG ./flask/
-        docker push $ECR_REGISTRY/$FLASK_REPOSITORY:$IMAGE_TAG
-
-    - name: NGINX Build, tag, and push image to Amazon ECR
-      id: image-info
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         NGINX_REPOSITORY: 3team-nginx
         IMAGE_TAG: ${{ steps.image.outputs.version }}
       run: |
+        echo "::set-output name=flask_repository::$FLASK_REPOSITORY"
         echo "::set-output name=nginx_repository::$NGINX_REPOSITORY"
         echo "::set-output name=image_tag::$IMAGE_TAG"
+        docker build -t $ECR_REGISTRY/$FLASK_REPOSITORY:$IMAGE_TAG ./flask/
+        docker push $ECR_REGISTRY/$FLASK_REPOSITORY:$IMAGE_TAG
         docker build -t $ECR_REGISTRY/$NGINX_REPOSITORY:$IMAGE_TAG ./nginx/
         docker push $ECR_REGISTRY/$NGINX_REPOSITORY:$IMAGE_TAG
 
