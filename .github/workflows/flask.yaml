@@ -36,17 +36,29 @@ jobs:
         echo VERSION=$VERSION
         echo "::set-output name=version::$VERSION"
 
-    - name: Build, tag, and push image to Amazon ECR
+    - name: FLASK Build, tag, and push image to Amazon ECR
       id: image-info
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: 3team-flask
+        FLASK_REPOSITORY: 3team-flask
         IMAGE_TAG: ${{ steps.image.outputs.version }}
       run: |
-        echo "::set-output name=ecr_repository::$ECR_REPOSITORY"
+        echo "::set-output name=flask_repository::$FLASK_REPOSITORY"
         echo "::set-output name=image_tag::$IMAGE_TAG"
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker build -t $ECR_REGISTRY/$FLASK_REPOSITORY:$IMAGE_TAG ./flask/
+        docker push $ECR_REGISTRY/$FLASK_REPOSITORY:$IMAGE_TAG
+
+    - name: NGINX Build, tag, and push image to Amazon ECR
+      id: image-info
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        NGINX_REPOSITORY: 3team-nginx
+        IMAGE_TAG: ${{ steps.image.outputs.version }}
+      run: |
+        echo "::set-output name=nginx_repository::$NGINX_REPOSITORY"
+        echo "::set-output name=image_tag::$IMAGE_TAG"
+        docker build -t $ECR_REGISTRY/$NGINX_REPOSITORY:$IMAGE_TAG ./nginx/
+        docker push $ECR_REGISTRY/$NGINX_REPOSITORY:$IMAGE_TAG
 
     - name: Setup Kustomize
       uses: imranismail/setup-kustomize@v1
@@ -62,12 +74,18 @@ jobs:
     - name: Update Kubernetes resources
       run: |
         echo ${{ steps.login-ecr.outputs.registry }}
-        echo ${{ steps.image-info.outputs.ecr_repository }}
+        echo ${{ steps.image-info.outputs.flask_repository }}
+        echo ${{ steps.image-info.outputs.nginx_repository }}
         echo ${{ steps.image-info.outputs.image_tag }}
-        cd k8s-manifest-repo/overlays/dev/
-        kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
+        cd k8s-manifest-repo/EKS/overlays/dev/
+        kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.flask_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.flask_repository }}:${{ steps.image-info.outputs.image_tag }}
+        kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.nginx_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.nginx_repository }}:${{ steps.image-info.outputs.image_tag }}
         cat kustomization.yaml
-
+        cd k8s-manifest-repo/OCP/overlays/dev/
+        kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.flask_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.flask_repository }}:${{ steps.image-info.outputs.image_tag }}
+        kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.nginx_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.nginx_repository }}:${{ steps.image-info.outputs.image_tag }}
+        cat kustomization.yaml
+        
     - name: Commit files
       run: |
         cd k8s-manifest-repo
