@@ -73,7 +73,7 @@ jobs:
         kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.flask_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.flask_repository }}:${{ steps.image-info.outputs.image_tag }}
         kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.nginx_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.nginx_repository }}:${{ steps.image-info.outputs.image_tag }}
         cat kustomization.yaml
-        cd k8s-manifest-repo/OCP/overlays/dev/
+        cd ../../../OCP/overlays/dev/
         kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.flask_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.flask_repository }}:${{ steps.image-info.outputs.image_tag }}
         kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.nginx_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.nginx_repository }}:${{ steps.image-info.outputs.image_tag }}
         cat kustomization.yaml
