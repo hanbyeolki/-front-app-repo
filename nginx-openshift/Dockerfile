@@ -17,5 +17,6 @@ RUN  chmod -R 1777 /var/cache/nginx/fastcgi_temp
 RUN  chmod -R 1777 /var/cache/nginx/client_body_temp
 RUN  chmod -R 1777 /var/cache/nginx/scgi_temp
 RUN  chmod -R 1777 /var/cache/nginx/uwsgi_temp
+RUN  chmod -R 1777 /var/run/nginx.pid
 
 
