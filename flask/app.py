@@ -22,6 +22,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:It12345!@team3-db-01-inst
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+
+
+
+
 # Flask-Login 설정
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -29,6 +33,7 @@ bcrypt = Bcrypt(app)
 login_manager.init_app(app)
 
 sqs = boto3.client('sqs', region_name='ap-northeast-2')
+s3 = boto3.client('s3', region_name='ap-northeast-2')
 
 class UserTicketAssociation(db.Model):
     __tablename__ = 'user_ticket_association'
@@ -228,7 +233,8 @@ def buy(ticket_id):
                     'price': ticket.price,
                     'quantity': purchased_quantity,
                     'total_price': ticket.price * purchased_quantity,
-                    'user_id': session['user_id']
+                    'user_id': session['user_id'],
+                    'type' : 'purchase'
                 }
 
                 # SQS에 메시지 전송
@@ -310,17 +316,40 @@ def cancel_reservation(ticket_id):
 
     if form.validate_on_submit():
         cancel_quantity = form.cancel_quantity.data
+        ticket = Ticket.query.get(ticket_id)
         
         # 여기에서 예매 취소 로직을 추가
         # ticket_id와 cancel_quantity를 사용하여 예매 정보를 찾아 예매를 취소하는 코드를 작성
+
+ 
+                # 여기에서 실제 구매 로직을 추가할 수 있습니다.
+                # 예시로 구매 내용을 SQS로 전송합니다.
+        cancel_data = {
+            'ticket_id': ticket_id,
+            'event': ticket.event,
+            'price': ticket.price,
+            'quantity': cancel_quantity,
+            'total_price': ticket.price * cancel_quantity,
+            'user_id': session['user_id'],
+            'type' : 'cancel'
+        }
+
+                # SQS에 메시지 전송
+        sqs.send_message(
+            QueueUrl='https://sqs.ap-northeast-2.amazonaws.com/447079561480/Ticket-Buy-Queue.fifo',
+            MessageBody=json.dumps(cancel_data),
+            MessageGroupId=f'event_{ticket_id}',
+            MessageDeduplicationId=str(uuid.uuid4())
+        )
+        
+        
+        
         user = User.query.filter_by(user_id=session['user_id']).first()
         
         existing_association = UserTicketAssociation.query.filter_by(user_id=user.uid, ticket_id=ticket_id).first()
         
         if existing_association:
             existing_association.quantity -= cancel_quantity        
-            ticket = Ticket.query.filter_by(id=ticket_id).first()
-            ticket.quantity += cancel_quantity
             db.session.commit()
         else:
             flash('error', 'danger')

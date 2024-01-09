@@ -7,7 +7,7 @@
     <!-- 부트스트랩 CDN -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- 사용자 정의 스타일 -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://team3test99.s3.ap-northeast-2.amazonaws.com/styles/styles.css">
 </head>
 <body>
     {% extends 'base.html' %}
@@ -29,7 +29,7 @@
         {% endwith %}
         <h1 class="mt-4">Buy Ticket for {{ ticket.event }}</h1>
         <div class="ticket-info">
-            <img src="{{ url_for('static', filename = ticket.event + '.jpg') }}" alt="{{ ticket.event }}">
+             <img src="https://team3test99.s3.ap-northeast-2.amazonaws.com/images/{{ ticket.event }}.jpg" alt="{{ ticket.event }}">
             <p>가격: {{ ticket.price }} 원</p>
             <p>남은 수량: {{ ticket.quantity }}</p>
             <br> <!-- 공백 줄 추가 -->
