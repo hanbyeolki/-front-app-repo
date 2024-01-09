@@ -45,7 +45,7 @@ app.config["SECRET_KEY"] = "your_secret_key_here"
 # SQLAlchemy 설정
 app.config[
     "SQLALCHEMY_DATABASE_URI"
-] = "mysql://admin:It12345!@team3-db-01-instance-1.c1eiqtt31v98.ap-northeast-2.rds.amazonaws.com:3306/recapark"
+] = "mysql://clusteradm:It12345!@10.0.0.200:6446/recapark"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
