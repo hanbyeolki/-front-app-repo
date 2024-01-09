@@ -43,7 +43,9 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "your_secret_key_here"
 
 # SQLAlchemy 설정
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://myrouter:It12345!@10.0.0.201/recapark"
+app.config[
+    "SQLALCHEMY_DATABASE_URI"
+] = "mysql://myrouter:It12345!@10.0.0.200:6446/recapark"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
