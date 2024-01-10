@@ -83,7 +83,7 @@ jobs:
         cat kustomization.yaml
         cd ../../../EKS/overlays/dev/
         kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.flask_aws_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.flask_aws_repository }}:${{ steps.image-info.outputs.image_tag }}
-        kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.nginx_aws_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.aws_repository }}:${{ steps.image-info.outputs.image_tag }}
+        kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.nginx_aws_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.nginx_aws_repository }}:${{ steps.image-info.outputs.image_tag }}
         cat kustomization.yaml
         
     - name: Commit files
