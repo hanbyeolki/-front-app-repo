@@ -56,7 +56,13 @@ login_manager.login_view = "login"
 bcrypt = Bcrypt(app)
 login_manager.init_app(app)
 
-sqs = boto3.client("sqs", region_name="ap-northeast-2", profile_name="test")
+
+sqs = boto3.client(
+    "sqs",
+    region_name="ap-northeast-2",
+    aws_access_key_id="AKIAWQGAEXEECFIBK6NC",
+    aws_secret_access_key="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",
+)
 s3 = boto3.client("s3", region_name="ap-northeast-2")
 
 
