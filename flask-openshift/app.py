@@ -56,7 +56,7 @@ login_manager.login_view = "login"
 bcrypt = Bcrypt(app)
 login_manager.init_app(app)
 
-sqs = boto3.client("sqs", region_name="ap-northeast-2")
+sqs = boto3.client("sqs", region_name="ap-northeast-2", profile_name="test")
 s3 = boto3.client("s3", region_name="ap-northeast-2")
 
 
